@@ -53,80 +53,81 @@ export const BountiesQuests = ({ onOpenLogModal }) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Bounty Board Header */}
       <div>
-        <h2 className="text-3xl font-black text-amber-200 tracking-tight flex items-center gap-2">
-          <Scroll className="w-7 h-7 text-amber-400" />
-          Dynamic Bounties & Daily Quests
-          <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500 font-bold uppercase">
-            Active Multipliers
+        <h2 className="text-xl sm:text-2xl font-bold text-amber-100 tracking-tight flex items-center gap-2">
+          <Scroll className="w-5 h-5 text-amber-400" />
+          Active Quests & Bounties
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/40 font-semibold uppercase">
+            Bonus Multipliers
           </span>
         </h2>
-        <p className="text-xs text-amber-100/70">
-          Complete daily fitness challenges to earn bonus standardized points and multipliers
+        <p className="text-xs text-amber-200/60 mt-0.5">
+          Complete daily fitness challenges to earn bonus points and multipliers
         </p>
       </div>
 
-      {/* Quests Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Quests List */}
+      <div className="space-y-3">
         {bounties.map(bounty => {
           const isClaimed = bounty.claimedBy?.includes(user?.id);
 
           return (
             <div
               key={bounty.id}
-              className={`p-6 rounded-2xl border-3 flex flex-col justify-between transition-all relative ${
+              className={`p-4 sm:p-5 rounded-2xl border transition-all flex flex-col justify-between ${
                 isClaimed
-                  ? 'border-emerald-600/50 bg-[#162419]/90'
-                  : 'border-[#5C3317] bg-[#241409] hover:border-amber-400 shadow-md'
+                  ? 'border-emerald-600/40 bg-[#142318]/80'
+                  : 'kr-wood-panel hover:border-amber-500/50'
               }`}
             >
               <div>
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="text-xs font-black px-2.5 py-0.5 rounded-md bg-[#382012] text-amber-300 border border-[#78350F] uppercase">
+                <div className="flex items-center justify-between gap-2 mb-1.5">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#1B1008] text-amber-300 border border-amber-600/40 uppercase">
                     {bounty.category} Quest
                   </span>
-                  <div className="flex items-center gap-1 text-xs text-amber-300/80">
-                    <Clock className="w-3.5 h-3.5 text-amber-400" />
+                  <div className="flex items-center gap-1 text-[11px] text-amber-200/60 font-medium">
+                    <Clock className="w-3 h-3 text-amber-400" />
                     <span>Expires: {bounty.expiresIn}</span>
                   </div>
                 </div>
 
-                <h3 className="text-xl font-black text-amber-100">{bounty.title}</h3>
-                <p className="text-xs text-amber-100/80 mt-1 leading-relaxed">
+                <h3 className="text-base font-bold text-amber-100">{bounty.title}</h3>
+                <p className="text-xs text-amber-200/70 mt-1 leading-relaxed">
                   {bounty.description}
                 </p>
 
                 {/* Reward Badge */}
-                <div className="flex items-center gap-2 mt-4 p-2.5 rounded-xl bg-[#1A0E06] border border-[#5C3317] text-xs font-bold">
-                  <Flame className="w-4 h-4 text-amber-400" />
-                  <span className="text-amber-300">
-                    Reward: +{bounty.rewardPoints} PTS & {bounty.multiplier}x Multiplier (⭐⭐⭐)
+                <div className="flex items-center gap-2 mt-3 p-2 rounded-xl bg-[#180E08] border border-[#3E2211] text-xs font-medium">
+                  <Flame className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+                  <span className="text-amber-300 font-semibold">
+                    +{bounty.rewardPoints} PTS & {bounty.multiplier}x Multiplier
                   </span>
                 </div>
               </div>
 
               {/* Action Button */}
-              <div className="mt-5 pt-4 border-t border-[#5C3317] flex items-center justify-between">
+              <div className="mt-4 pt-3 border-t border-[#432512] flex items-center justify-between text-xs">
                 {isClaimed ? (
-                  <span className="text-xs font-black text-emerald-400 flex items-center gap-1.5">
-                    <CheckCircle2 className="w-4 h-4" /> Bounty Claimed (+{bounty.rewardPoints} pts)
+                  <span className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4" /> Claimed (+{bounty.rewardPoints} pts)
                   </span>
                 ) : (
                   <>
                     <button
                       onClick={onOpenLogModal}
-                      className="text-xs text-amber-400 hover:text-amber-300 font-bold underline"
+                      className="text-amber-400 hover:text-amber-300 font-medium hover:underline"
                     >
-                      Log required activity →
+                      Log required workout →
                     </button>
                     <button
-                      onClick={() => handleClaim(bounty.id)}
                       disabled={claimingId === bounty.id}
-                      className="kr-btn-gold px-4 py-2 rounded-xl text-xs font-black shadow-kr-button"
+                      onClick={() => handleClaim(bounty.id)}
+                      className="kr-btn-gold px-3.5 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1"
                     >
-                      {claimingId === bounty.id ? 'Claiming...' : 'Claim Bounty ⭐'}
+                      <Sparkles className="w-3 h-3" />
+                      <span>{claimingId === bounty.id ? 'Claiming...' : 'Claim Reward'}</span>
                     </button>
                   </>
                 )}

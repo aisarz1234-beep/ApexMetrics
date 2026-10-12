@@ -21,25 +21,25 @@ export const AnalyticsCharts = ({ workouts, user }) => {
   }));
 
   const disciplineData = [
-    { name: 'Cardio', value: 42, color: '#16A34A', icon: '🏃' },
-    { name: 'Strength', value: 28, color: '#DC2626', icon: '🏋️' },
-    { name: 'Calisthenics', value: 18, color: '#9333EA', icon: '🤸' },
-    { name: 'Sports & HIIT', value: 12, color: '#2563EB', icon: '⚡' }
+    { name: 'Cardio', value: 42, color: '#10B981', icon: '🏃' },
+    { name: 'Strength', value: 28, color: '#EF4444', icon: '🏋️' },
+    { name: 'Calisthenics', value: 18, color: '#A855F7', icon: '🤸' },
+    { name: 'Sports & HIIT', value: 12, color: '#3B82F6', icon: '⚡' }
   ];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* 7-Day Point Velocity */}
-      <div className="p-6 rounded-2xl kr-wood-panel border-3 border-[#5C3317]">
-        <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#5C3317]">
+      <div className="p-5 sm:p-6 rounded-2xl kr-wood-panel">
+        <div className="flex items-center justify-between mb-4 pb-2.5 border-b border-[#452612]">
           <div>
-            <h3 className="text-lg font-black text-amber-200 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-amber-400" />
-              Weekly Point Velocity & Trend
+            <h3 className="text-base sm:text-lg font-bold text-amber-100 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
+              Weekly Point Velocity
             </h3>
-            <p className="text-xs text-amber-100/70">Cumulative standardized score trajectory</p>
+            <p className="text-xs text-amber-200/60 mt-0.5">Cumulative standardized score trajectory</p>
           </div>
-          <span className="text-xs font-mono font-black text-amber-300 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/40">
+          <span className="text-xs font-mono font-bold text-amber-300 bg-amber-500/15 px-2.5 py-1 rounded-lg border border-amber-500/30">
             +{Math.round(user?.weeklyPoints || 840)} PTS
           </span>
         </div>
@@ -49,28 +49,28 @@ export const AnalyticsCharts = ({ workouts, user }) => {
             <AreaChart data={trendData}>
               <defs>
                 <linearGradient id="krPointGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.6} />
+                  <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.45} />
                   <stop offset="95%" stopColor="#F59E0B" stopOpacity={0.0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#5C3317" />
-              <XAxis dataKey="day" stroke="#FDE68A" fontSize={12} />
-              <YAxis stroke="#FDE68A" fontSize={12} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#3D2413" />
+              <XAxis dataKey="day" stroke="#D97706" fontSize={11} tickLine={false} />
+              <YAxis stroke="#D97706" fontSize={11} tickLine={false} />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#241409',
-                  borderColor: '#78350F',
+                  backgroundColor: '#1E120A',
+                  borderColor: '#6B3E1C',
                   borderRadius: '0.75rem',
-                  fontSize: '13px',
+                  fontSize: '12px',
                   color: '#FEF3C7',
-                  fontFamily: 'Outfit, Inter, sans-serif'
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.6)'
                 }}
               />
               <Area
                 type="monotone"
                 dataKey="points"
                 stroke="#F59E0B"
-                strokeWidth={3}
+                strokeWidth={2.5}
                 fillOpacity={1}
                 fill="url(#krPointGrad)"
               />
@@ -80,44 +80,44 @@ export const AnalyticsCharts = ({ workouts, user }) => {
       </div>
 
       {/* Multi-Discipline Load Ratio */}
-      <div className="p-6 rounded-2xl kr-stone-card border-3 border-[#5C3317] flex flex-col justify-between">
-        <div className="flex items-center justify-between mb-2 pb-2 border-b border-[#5C3317]">
+      <div className="p-5 sm:p-6 rounded-2xl kr-wood-panel flex flex-col justify-between">
+        <div className="flex items-center justify-between mb-2 pb-2.5 border-b border-[#452612]">
           <div>
-            <h3 className="text-lg font-black text-amber-200 flex items-center gap-2">
-              <PieIcon className="w-5 h-5 text-amber-400" />
-              Activity Discipline Distribution
+            <h3 className="text-base sm:text-lg font-bold text-amber-100 flex items-center gap-2">
+              <PieIcon className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
+              Activity Discipline Ratio
             </h3>
-            <p className="text-xs text-amber-100/70">Cardio vs Volume vs Rep Ratio</p>
+            <p className="text-xs text-amber-200/60 mt-0.5">Cardio vs Volume vs Rep Distribution</p>
           </div>
         </div>
 
         <div className="flex items-center justify-center gap-6 h-52">
-          <div className="w-40 h-40">
+          <div className="w-36 h-36 sm:w-40 sm:h-40">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={disciplineData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={40}
+                  innerRadius={42}
                   outerRadius={62}
-                  paddingAngle={5}
+                  paddingAngle={4}
                   dataKey="value"
                 >
                   {disciplineData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} stroke="#382012" strokeWidth={2} />
+                    <Cell key={`cell-${index}`} fill={entry.color} stroke="#1A0F08" strokeWidth={2} />
                   ))}
                 </Pie>
               </PieChart>
             </ResponsiveContainer>
           </div>
 
-          <div className="space-y-2.5 text-xs">
+          <div className="space-y-2 text-xs">
             {disciplineData.map(d => (
-              <div key={d.name} className="flex items-center gap-2.5">
-                <span className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: d.color }} />
-                <span className="text-amber-100 font-bold">{d.icon} {d.name}:</span>
-                <span className="font-mono font-black text-amber-300">{d.value}%</span>
+              <div key={d.name} className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: d.color }} />
+                <span className="text-amber-100/90 font-medium">{d.icon} {d.name}:</span>
+                <span className="font-mono font-bold text-amber-300">{d.value}%</span>
               </div>
             ))}
           </div>
