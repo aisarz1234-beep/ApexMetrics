@@ -1,0 +1,43 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start ApexMetrics Server",
+      "type": "shell",
+      "command": "node server/src/server.js",
+      "options": {
+        "env": {
+          "PATH": "C:\\Users\\user\\.nodejs\\node-v20.18.0-win-x64;${env:PATH}"
+        }
+      },
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Run Dev Mode (Concurrent)",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": {
+        "env": {
+          "PATH": "C:\\Users\\user\\.nodejs\\node-v20.18.0-win-x64;${env:PATH}"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Tests",
+      "type": "shell",
+      "command": "npm test",
+      "options": {
+        "env": {
+          "PATH": "C:\\Users\\user\\.nodejs\\node-v20.18.0-win-x64;${env:PATH}"
+        }
+      },
+      "problemMatcher": [],
+      "group": "test"
+    }
+  ]
+}

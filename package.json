@@ -1,0 +1,16 @@
+{
+  "name": "apex-metrics",
+  "version": "1.0.0",
+  "description": "ApexMetrics - Unified Multi-Discipline Athletic Point Platform with Real-Time Leaderboards and Gamification",
+  "scripts": {
+    "server": "node server/src/server.js",
+    "client": "npm run --prefix client dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "build": "npm run --prefix client build",
+    "test": "npm run --prefix server test",
+    "start": "node server/src/server.js"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
