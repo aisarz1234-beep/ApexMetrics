@@ -9,18 +9,19 @@ import {
   Activity,
   Dumbbell,
   Timer,
-  FileCheck2,
   AlertTriangle,
   Upload,
   CheckCircle,
   Flame,
-  ShieldCheck
+  ShieldCheck,
+  Scroll,
+  Swords
 } from 'lucide-react';
 
 export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
   const { user } = useAuth();
 
-  const [category, setCategory] = useState('cardio'); // 'cardio' | 'calisthenics' | 'strength' | 'sports'
+  const [category, setCategory] = useState('cardio');
   const [activityType, setActivityType] = useState('running');
   const [metrics, setMetrics] = useState({
     distanceKm: '5.0',
@@ -32,22 +33,18 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
     durationSeconds: '60',
     intensity: 'high_intensity'
   });
-  const [exerciseName, setExerciseName] = useState('Bench Press');
-  const [sportName, setSportName] = useState('HIIT Circuit');
-  const [zone, setZone] = useState('Track & Field Stadium');
+  const [exerciseName, setExerciseName] = useState('Barbell Bench Press');
+  const [sportName, setSportName] = useState('Combat Sparring');
+  const [zone, setZone] = useState('The Ironkeep Forge & Barracks');
 
-  // GPX Verification state
-  const [gpxFile, setGpxFile] = useState(null);
   const [gpxVerified, setGpxVerified] = useState(false);
   const [gpxData, setGpxData] = useState(null);
   const [isVerifyingGpx, setIsVerifyingGpx] = useState(false);
 
-  // Live Score Preview
   const [liveScore, setLiveScore] = useState({ finalPoints: 50, breakdownFormula: '' });
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Update live score whenever inputs change
   useEffect(() => {
     const calc = calculateLivePoints(category, activityType, metrics, user?.characterClass);
     setLiveScore(calc);
@@ -59,20 +56,18 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
     setMetrics(prev => ({ ...prev, [field]: val }));
   };
 
-  // Mock GPX sample generator for quick verification test
   const handleLoadSampleGpx = async () => {
     setIsVerifyingGpx(true);
     const sampleGpxText = `<?xml version="1.0" encoding="UTF-8"?>
 <gpx version="1.1" creator="Garmin Forerunner 965">
   <trk>
-    <name>Morning 5K Campus Speed Run</name>
+    <name>Linirea Woodland Sprint</name>
     <trkseg>
-      <trkpt lat="37.7749" lon="-122.4194"><ele>15.2</ele><time>2026-10-12T06:30:00Z</time><hr>145</hr></trkpt>
-      <trkpt lat="37.7758" lon="-122.4182"><ele>15.8</ele><time>2026-10-12T06:34:00Z</time><hr>158</hr></trkpt>
-      <trkpt lat="37.7770" lon="-122.4165"><ele>16.4</ele><time>2026-10-12T06:38:00Z</time><hr>162</hr></trkpt>
-      <trkpt lat="37.7785" lon="-122.4140"><ele>17.1</ele><time>2026-10-12T06:42:00Z</time><hr>165</hr></trkpt>
-      <trkpt lat="37.7801" lon="-122.4115"><ele>18.0</ele><time>2026-10-12T06:47:00Z</time><hr>168</hr></trkpt>
-      <trkpt lat="37.7815" lon="-122.4090"><ele>18.5</ele><time>2026-10-12T06:52:00Z</time><hr>164</hr></trkpt>
+      <trkpt lat="37.7700" lon="-122.4100"><ele>15.2</ele><time>2026-10-12T06:00:00Z</time><hr>145</hr></trkpt>
+      <trkpt lat="37.7800" lon="-122.4100"><ele>15.8</ele><time>2026-10-12T06:05:00Z</time><hr>158</hr></trkpt>
+      <trkpt lat="37.7900" lon="-122.4100"><ele>16.4</ele><time>2026-10-12T06:10:00Z</time><hr>162</hr></trkpt>
+      <trkpt lat="37.8000" lon="-122.4100"><ele>17.1</ele><time>2026-10-12T06:15:00Z</time><hr>165</hr></trkpt>
+      <trkpt lat="37.8100" lon="-122.4100"><ele>18.0</ele><time>2026-10-12T06:20:00Z</time><hr>168</hr></trkpt>
     </trkseg>
   </trk>
 </gpx>`;
@@ -113,56 +108,55 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
 
       const res = await api.logWorkout(payload);
 
-      // Trigger Confetti Celebration!
       confetti({
-        particleCount: 120,
-        spread: 80,
+        particleCount: 140,
+        spread: 90,
         origin: { y: 0.6 }
       });
 
       if (onWorkoutLogged) onWorkoutLogged(res);
       onClose();
     } catch (err) {
-      setErrorMsg(err.message || 'Failed to submit workout log.');
+      setErrorMsg(err.message || 'Failed to proclaim heroic feat.');
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-2xl bg-[#111827] border border-slate-700 rounded-2xl shadow-2xl overflow-hidden my-8">
-        {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/50">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
+      <div className="relative w-full max-w-2xl kr-wood-panel border-4 border-[#78350F] shadow-2xl overflow-hidden my-8">
+        {/* Header Trim */}
+        <div className="flex items-center justify-between px-6 py-4 border-b-2 border-[#5C3317] bg-[#1E0F07]">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-b from-amber-400 to-amber-600 border border-amber-800 text-stone-900 flex items-center justify-center text-xl font-black shadow-kr-gold">
               ⚡
             </div>
             <div>
-              <h3 className="text-lg font-extrabold text-white">Log Multi-Discipline Workout</h3>
-              <p className="text-xs text-slate-400">Standardized point scoring with heuristic validation</p>
+              <h3 className="text-2xl font-black text-amber-200">Log Multi-Discipline Workout</h3>
+              <p className="text-xs text-amber-300/80">Standardized point normalization & verification engine</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
+            className="p-1.5 text-amber-300 hover:text-white rounded-lg hover:bg-[#3D2210] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="p-6 space-y-5">
           {errorMsg && (
-            <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+            <div className="p-3 rounded-xl bg-red-950 border border-red-500 text-red-200 text-xs font-bold flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 flex-shrink-0 text-red-400" />
               <span>{errorMsg}</span>
             </div>
           )}
 
           {/* Discipline Selector Cards */}
           <div>
-            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
-              Select Discipline
+            <label className="block text-xs font-bold text-amber-300 uppercase tracking-wider mb-2">
+              Select Activity Discipline
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               <button
@@ -171,15 +165,15 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
                   setCategory('cardio');
                   setActivityType('running');
                 }}
-                className={`p-3 rounded-xl border text-left transition-all ${
+                className={`p-3 rounded-xl border-2 text-left transition-all ${
                   category === 'cardio'
-                    ? 'border-cyan-500 bg-cyan-500/10 text-cyan-300 shadow-glow-cyan'
-                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'
+                    ? 'border-amber-400 bg-amber-500/20 text-amber-200 shadow-kr-gold'
+                    : 'border-[#5C3317] bg-[#241409] text-amber-200/70 hover:border-amber-600'
                 }`}
               >
-                <Activity className="w-5 h-5 mb-1 text-cyan-400" />
-                <div className="text-xs font-bold">Cardio</div>
-                <div className="text-[10px] text-slate-400">Swim, Run, Bike</div>
+                <div className="text-xl mb-1">🏃</div>
+                <div className="text-sm font-black">Cardio</div>
+                <div className="text-[10px] text-amber-300/70">Swim, Run, Bike</div>
               </button>
 
               <button
@@ -188,15 +182,15 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
                   setCategory('calisthenics');
                   setActivityType('pull_up');
                 }}
-                className={`p-3 rounded-xl border text-left transition-all ${
+                className={`p-3 rounded-xl border-2 text-left transition-all ${
                   category === 'calisthenics'
-                    ? 'border-violet-500 bg-violet-500/10 text-violet-300 shadow-glow-purple'
-                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'
+                    ? 'border-amber-400 bg-amber-500/20 text-amber-200 shadow-kr-gold'
+                    : 'border-[#5C3317] bg-[#241409] text-amber-200/70 hover:border-amber-600'
                 }`}
               >
-                <Flame className="w-5 h-5 mb-1 text-violet-400" />
-                <div className="text-xs font-bold">Calisthenics</div>
-                <div className="text-[10px] text-slate-400">Reps & Planks</div>
+                <div className="text-xl mb-1">🤸</div>
+                <div className="text-sm font-black">Calisthenics</div>
+                <div className="text-[10px] text-amber-300/70">Reps & Planks</div>
               </button>
 
               <button
@@ -205,15 +199,15 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
                   setCategory('strength');
                   setActivityType('compound');
                 }}
-                className={`p-3 rounded-xl border text-left transition-all ${
+                className={`p-3 rounded-xl border-2 text-left transition-all ${
                   category === 'strength'
-                    ? 'border-amber-500 bg-amber-500/10 text-amber-300 shadow-glow-gold'
-                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'
+                    ? 'border-amber-400 bg-amber-500/20 text-amber-200 shadow-kr-gold'
+                    : 'border-[#5C3317] bg-[#241409] text-amber-200/70 hover:border-amber-600'
                 }`}
               >
-                <Dumbbell className="w-5 h-5 mb-1 text-amber-400" />
-                <div className="text-xs font-bold">Strength</div>
-                <div className="text-[10px] text-slate-400">Volume Lifts</div>
+                <div className="text-xl mb-1">🏋️</div>
+                <div className="text-sm font-black">Weightlifting</div>
+                <div className="text-[10px] text-amber-300/70">Volume Lifts</div>
               </button>
 
               <button
@@ -222,21 +216,21 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
                   setCategory('sports');
                   setActivityType('high_intensity');
                 }}
-                className={`p-3 rounded-xl border text-left transition-all ${
+                className={`p-3 rounded-xl border-2 text-left transition-all ${
                   category === 'sports'
-                    ? 'border-emerald-500 bg-emerald-500/10 text-emerald-300'
-                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'
+                    ? 'border-amber-400 bg-amber-500/20 text-amber-200 shadow-kr-gold'
+                    : 'border-[#5C3317] bg-[#241409] text-amber-200/70 hover:border-amber-600'
                 }`}
               >
-                <Timer className="w-5 h-5 mb-1 text-emerald-400" />
-                <div className="text-xs font-bold">Sports / HIIT</div>
-                <div className="text-[10px] text-slate-400">Time-Based</div>
+                <div className="text-xl mb-1">⚡</div>
+                <div className="text-sm font-black whitespace-nowrap">Sports / HIIT</div>
+                <div className="text-[10px] text-amber-300/70">Time-Based</div>
               </button>
             </div>
           </div>
 
           {/* Dynamic Inputs Based on Category */}
-          <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-4">
+          <div className="p-4 rounded-xl bg-[#241409] border-2 border-[#5C3317] space-y-4">
             {/* Cardio Inputs */}
             {category === 'cardio' && (
               <div className="space-y-4">
@@ -250,10 +244,10 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
                       key={act.id}
                       type="button"
                       onClick={() => setActivityType(act.id)}
-                      className={`py-2 px-2 text-xs font-semibold rounded-lg border text-center transition-all ${
+                      className={`py-2 px-1 text-xs font-bold rounded-lg border-2 text-center transition-all ${
                         activityType === act.id
-                          ? 'border-cyan-500 bg-cyan-500/20 text-cyan-300'
-                          : 'border-slate-800 bg-slate-900 text-slate-400'
+                          ? 'border-amber-400 bg-amber-500/20 text-amber-200'
+                          : 'border-[#5C3317] bg-[#1A0E06] text-amber-300/60'
                       }`}
                     >
                       {act.label}
@@ -263,8 +257,8 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1">
-                      Distance (km)
+                    <label className="block text-xs font-bold text-amber-300 mb-1">
+                      Distance Covered (km)
                     </label>
                     <input
                       type="number"
@@ -272,11 +266,11 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
                       min="0.1"
                       value={metrics.distanceKm}
                       onChange={e => handleMetricChange('distanceKm', e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white font-mono text-sm focus:outline-none focus:border-cyan-500"
+                      className="w-full px-3 py-2 rounded-lg bg-[#180A04] border-2 border-[#5C3317] text-amber-100 font-mono text-sm focus:outline-none focus:border-amber-400"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1">
+                    <label className="block text-xs font-bold text-amber-300 mb-1">
                       Duration (minutes)
                     </label>
                     <input
@@ -285,21 +279,21 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
                       min="1"
                       value={metrics.durationMinutes}
                       onChange={e => handleMetricChange('durationMinutes', e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white font-mono text-sm focus:outline-none focus:border-cyan-500"
+                      className="w-full px-3 py-2 rounded-lg bg-[#180A04] border-2 border-[#5C3317] text-amber-100 font-mono text-sm focus:outline-none focus:border-amber-400"
                     />
                   </div>
                 </div>
 
-                {/* GPX/FIT File Verification Drawer */}
-                <div className="p-3 rounded-lg bg-slate-800/60 border border-slate-700/80">
+                {/* GPS Smartwatch Verification */}
+                <div className="p-3 rounded-xl bg-[#1A0E06] border border-[#5C3317]">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-                      <ShieldCheck className="w-4 h-4 text-cyan-400" />
-                      Smartwatch / GPX Verification Engine
+                    <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                      <ShieldCheck className="w-4 h-4 text-amber-400" />
+                      Smartwatch GPS Verification
                     </span>
                     {gpxVerified && (
                       <span className="text-[11px] font-bold text-emerald-400 flex items-center gap-1">
-                        <CheckCircle className="w-3.5 h-3.5" /> GPS Verified (Trust: 99%)
+                        <CheckCircle className="w-3.5 h-3.5" /> Certified GPS (Trust: 99%)
                       </span>
                     )}
                   </div>
@@ -308,13 +302,13 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
                       type="button"
                       onClick={handleLoadSampleGpx}
                       disabled={isVerifyingGpx}
-                      className="text-xs px-3 py-1.5 rounded bg-slate-700 hover:bg-slate-600 text-cyan-300 font-semibold flex items-center gap-1.5 transition-all"
+                      className="kr-btn-gold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm font-bold"
                     >
                       <Upload className="w-3.5 h-3.5" />
-                      {isVerifyingGpx ? 'Analyzing Trackpoints...' : 'Load & Verify Garmin Track (Demo)'}
+                      {isVerifyingGpx ? 'Inspecting Trackpoints...' : 'Load & Verify Garmin Track (Demo)'}
                     </button>
-                    <span className="text-[11px] text-slate-400">
-                      Auto-computes true Haversine distance & pace limits
+                    <span className="text-[11px] text-amber-200/70">
+                      Calculates authentic Haversine pacing
                     </span>
                   </div>
                 </div>
@@ -329,16 +323,16 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
                     { id: 'pull_up', label: 'Pull-up (3.0 pts)' },
                     { id: 'push_up', label: 'Push-up (0.8 pts)' },
                     { id: 'squat', label: 'Squat (0.5 pts)' },
-                    { id: 'plank', label: 'Plank (0.2/sec)' }
+                    { id: 'plank', label: 'Plank (0.2/s)' }
                   ].map(act => (
                     <button
                       key={act.id}
                       type="button"
                       onClick={() => setActivityType(act.id)}
-                      className={`py-2 px-1 text-xs font-semibold rounded-lg border text-center transition-all ${
+                      className={`py-2 px-1 text-xs font-bold rounded-lg border-2 text-center transition-all ${
                         activityType === act.id
-                          ? 'border-violet-500 bg-violet-500/20 text-violet-300'
-                          : 'border-slate-800 bg-slate-900 text-slate-400'
+                          ? 'border-amber-400 bg-amber-500/20 text-amber-200'
+                          : 'border-[#5C3317] bg-[#1A0E06] text-amber-300/60'
                       }`}
                     >
                       {act.label}
@@ -348,7 +342,7 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
 
                 {activityType === 'plank' ? (
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1">
+                    <label className="block text-xs font-bold text-amber-300 mb-1">
                       Time Under Tension (Seconds)
                     </label>
                     <input
@@ -357,13 +351,13 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
                       min="5"
                       value={metrics.durationSeconds}
                       onChange={e => handleMetricChange('durationSeconds', e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white font-mono text-sm focus:outline-none focus:border-violet-500"
+                      className="w-full px-3 py-2 rounded-lg bg-[#180A04] border-2 border-[#5C3317] text-amber-100 font-mono text-sm focus:outline-none focus:border-amber-400"
                     />
                   </div>
                 ) : (
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1">
-                      Total Repetitions
+                    <label className="block text-xs font-bold text-amber-300 mb-1">
+                      Total Strict Repetitions
                     </label>
                     <input
                       type="number"
@@ -371,7 +365,7 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
                       min="1"
                       value={metrics.reps}
                       onChange={e => handleMetricChange('reps', e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white font-mono text-sm focus:outline-none focus:border-violet-500"
+                      className="w-full px-3 py-2 rounded-lg bg-[#180A04] border-2 border-[#5C3317] text-amber-100 font-mono text-sm focus:outline-none focus:border-amber-400"
                     />
                   </div>
                 )}
@@ -383,35 +377,34 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1">
-                      Lift Category & Multiplier
+                    <label className="block text-xs font-bold text-amber-300 mb-1">
+                      Lift Coefficient
                     </label>
                     <select
                       value={metrics.liftType}
                       onChange={e => handleMetricChange('liftType', e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs font-semibold focus:outline-none focus:border-amber-500"
+                      className="w-full px-3 py-2 rounded-lg bg-[#180A04] border-2 border-[#5C3317] text-amber-100 text-xs font-bold focus:outline-none focus:border-amber-400"
                     >
                       <option value="compound">Compound (0.05 coeff: Squat, Bench, Deadlift)</option>
                       <option value="isolation">Isolation (0.02 coeff: Curls, Raises, etc.)</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1">
+                    <label className="block text-xs font-bold text-amber-300 mb-1">
                       Exercise Name
                     </label>
                     <input
                       type="text"
                       value={exerciseName}
                       onChange={e => setExerciseName(e.target.value)}
-                      placeholder="e.g. Barbell Bench Press"
-                      className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-amber-500"
+                      className="w-full px-3 py-2 rounded-lg bg-[#180A04] border-2 border-[#5C3317] text-amber-100 text-xs font-bold focus:outline-none focus:border-amber-400"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-3 gap-3">
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1">
+                    <label className="block text-xs font-bold text-amber-300 mb-1">
                       Weight (kg)
                     </label>
                     <input
@@ -420,11 +413,11 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
                       min="1"
                       value={metrics.weightKg}
                       onChange={e => handleMetricChange('weightKg', e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white font-mono text-sm focus:outline-none focus:border-amber-500"
+                      className="w-full px-3 py-2 rounded-lg bg-[#180A04] border-2 border-[#5C3317] text-amber-100 font-mono text-sm focus:outline-none focus:border-amber-400"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1">
+                    <label className="block text-xs font-bold text-amber-300 mb-1">
                       Reps per Set
                     </label>
                     <input
@@ -433,12 +426,12 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
                       min="1"
                       value={metrics.reps}
                       onChange={e => handleMetricChange('reps', e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white font-mono text-sm focus:outline-none focus:border-amber-500"
+                      className="w-full px-3 py-2 rounded-lg bg-[#180A04] border-2 border-[#5C3317] text-amber-100 font-mono text-sm focus:outline-none focus:border-amber-400"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1">
-                      Sets Completed
+                    <label className="block text-xs font-bold text-amber-300 mb-1">
+                      Sets Done
                     </label>
                     <input
                       type="number"
@@ -446,7 +439,7 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
                       min="1"
                       value={metrics.sets}
                       onChange={e => handleMetricChange('sets', e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white font-mono text-sm focus:outline-none focus:border-amber-500"
+                      className="w-full px-3 py-2 rounded-lg bg-[#180A04] border-2 border-[#5C3317] text-amber-100 font-mono text-sm focus:outline-none focus:border-amber-400"
                     />
                   </div>
                 </div>
@@ -458,20 +451,20 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1">
+                    <label className="block text-xs font-bold text-amber-300 mb-1">
                       Intensity Tier
                     </label>
                     <select
                       value={metrics.intensity}
                       onChange={e => handleMetricChange('intensity', e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs font-semibold focus:outline-none focus:border-emerald-500"
+                      className="w-full px-3 py-2 rounded-lg bg-[#180A04] border-2 border-[#5C3317] text-amber-100 text-xs font-bold focus:outline-none focus:border-amber-400"
                     >
-                      <option value="high_intensity">High-Intensity (2.0 pts/min: HIIT, Boxing)</option>
-                      <option value="moderate_intensity">Moderate-Intensity (1.0 pt/min: Yoga, Mobility)</option>
+                      <option value="high_intensity">High-Intensity (2.0 pts/min: Sparring, Boxing, HIIT)</option>
+                      <option value="moderate_intensity">Moderate-Intensity (1.0 pt/min: Mobility, Recovery)</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1">
+                    <label className="block text-xs font-bold text-amber-300 mb-1">
                       Duration (Minutes)
                     </label>
                     <input
@@ -480,72 +473,72 @@ export const QuickLogModal = ({ isOpen, onClose, onWorkoutLogged }) => {
                       min="1"
                       value={metrics.durationMinutes}
                       onChange={e => handleMetricChange('durationMinutes', e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white font-mono text-sm focus:outline-none focus:border-emerald-500"
+                      className="w-full px-3 py-2 rounded-lg bg-[#180A04] border-2 border-[#5C3317] text-amber-100 font-mono text-sm focus:outline-none focus:border-amber-400"
                     />
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Campus Zone (Turf Wars Territory Capture) */}
+            {/* Territory Sector */}
             <div>
-              <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">
-                Campus Location (Turf Wars Zone)
+              <label className="block text-xs font-bold text-amber-300 uppercase tracking-wider mb-1">
+                Turf War Territory Sector
               </label>
               <select
                 value={zone}
                 onChange={e => setZone(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs font-medium focus:outline-none focus:border-cyan-500"
+                className="w-full px-3 py-2 rounded-lg bg-[#180A04] border-2 border-[#5C3317] text-amber-100 text-xs font-bold focus:outline-none focus:border-amber-400"
               >
-                <option value="The Iron Dungeon / Student Gym">The Iron Dungeon / Student Gym (+5% Strength)</option>
-                <option value="Track & Field Stadium">Track & Field Stadium (+5% Running)</option>
-                <option value="Olympic Aquatic Center">Olympic Aquatic Center (+5% Swimming)</option>
-                <option value="Memorial Stadium Steps">Memorial Stadium Steps (+5% Calisthenics)</option>
-                <option value="University Quad & Green">University Quad & Green (+5% Sports)</option>
+                <option value="The Ironkeep Forge & Barracks">The Ironkeep Forge & Barracks (+5% Strength)</option>
+                <option value="Whispering Woods Ranger Glade">Whispering Woods Ranger Glade (+5% Running)</option>
+                <option value="Sunken Merfolk Lagoon">Sunken Merfolk Lagoon (+5% Swimming)</option>
+                <option value="Stormcloud Peak Mountain Bastion">Stormcloud Peak Mountain Bastion (+5% Calisthenics)</option>
+                <option value="King Denas's Royal Tournament Field">King Denas's Royal Tournament Field (+5% Combat)</option>
               </select>
             </div>
           </div>
 
-          {/* Unified Scoring Engine Live Preview */}
-          <div className="p-4 rounded-xl bg-gradient-to-r from-slate-900 to-cyan-950/40 border border-cyan-500/30 flex items-center justify-between">
+          {/* Unified Scoring Formula Live Preview */}
+          <div className="kr-parchment p-4 flex items-center justify-between border-2 border-[#8D5B29] shadow-md">
             <div>
-              <div className="text-[10px] uppercase tracking-wider font-extrabold text-cyan-400 flex items-center gap-1">
-                <Zap className="w-3.5 h-3.5" />
-                Unified Scoring Formula
+              <div className="text-[10px] uppercase tracking-wider font-bold text-[#78350F] flex items-center gap-1">
+                <Zap className="w-3.5 h-3.5 text-[#B45309]" />
+                Standardized Formula Preview
               </div>
-              <div className="text-xs text-slate-300 font-mono mt-0.5">
+              <div className="text-sm text-[#381A05] font-bold mt-0.5">
                 {liveScore.breakdownFormula}
               </div>
               {liveScore.bonusMultiplier > 1 && (
-                <div className="text-[11px] text-amber-400 font-semibold mt-0.5">
-                  ★ {user?.characterClass} Affinity Bonus: +{Math.round((liveScore.bonusMultiplier - 1) * 100)}%
+                <div className="text-xs text-[#991B1B] font-black mt-0.5">
+                  ★ {user?.characterClass} Hero Affinity Bonus: +{Math.round((liveScore.bonusMultiplier - 1) * 100)}%
                 </div>
               )}
             </div>
 
             <div className="text-right">
-              <div className="text-xs text-slate-400 font-medium">Standardized Points</div>
-              <div className="text-2xl font-black text-cyan-300 tracking-tight">
-                +{liveScore.finalPoints} <span className="text-xs font-bold text-slate-400">PTS</span>
+              <div className="text-[10px] text-[#78350F] font-bold uppercase">Points Awarded</div>
+              <div className="text-3xl font-black text-[#B45309]">
+                +{liveScore.finalPoints} <span className="text-xs font-bold text-[#78350F]">PTS</span>
               </div>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-end gap-3 pt-2 border-t border-slate-800">
+          <div className="flex items-center justify-end gap-3 pt-2 border-t-2 border-[#5C3317]">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg text-slate-400 hover:text-white font-medium text-sm transition-colors"
+              className="px-4 py-2 font-bold text-amber-300 hover:text-white transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-6 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-sm shadow-glow-cyan transition-all transform active:scale-95 disabled:opacity-50"
+              className="kr-btn-gold px-6 py-2.5 rounded-xl text-base font-black shadow-kr-button"
             >
-              {submitting ? 'Verifying & Saving...' : 'Submit Certified Log ⚡'}
+              {submitting ? 'Submitting Log...' : 'Submit Workout Log ⚡'}
             </button>
           </div>
         </form>

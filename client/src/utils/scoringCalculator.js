@@ -79,11 +79,11 @@ export function calculateLivePoints(category, type, metrics, userClass = 'Vangua
   // Class bonus
   let bonusMultiplier = 1.0;
   const cls = (userClass || '').toLowerCase();
-  if (cls.includes('juggernaut') && category === 'strength') bonusMultiplier = 1.10;
-  else if (cls.includes('strider') && type === 'running') bonusMultiplier = 1.10;
-  else if (cls.includes('aquanaut') && type === 'swimming') bonusMultiplier = 1.15;
-  else if (cls.includes('shinobi') && category === 'calisthenics') bonusMultiplier = 1.10;
-  else if (cls.includes('vanguard')) bonusMultiplier = 1.05;
+  if ((cls.includes('juggernaut') || cls.includes('paladin')) && category === 'strength') bonusMultiplier = 1.10;
+  else if ((cls.includes('strider') || cls.includes('ranger')) && type === 'running') bonusMultiplier = 1.10;
+  else if ((cls.includes('aquanaut') || cls.includes('tidecaller')) && type === 'swimming') bonusMultiplier = 1.15;
+  else if ((cls.includes('shinobi') || cls.includes('sorcerer')) && category === 'calisthenics') bonusMultiplier = 1.10;
+  else if (cls.includes('vanguard') || cls.includes('king')) bonusMultiplier = 1.05;
 
   const finalPoints = Math.round(basePoints * bonusMultiplier * 10) / 10;
 

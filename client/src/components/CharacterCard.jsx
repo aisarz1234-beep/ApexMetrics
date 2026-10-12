@@ -2,19 +2,20 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { StatRadarChart } from './StatRadarChart.jsx';
 import {
-  Sparkles,
-  Award,
   Shield,
+  Award,
+  Crown,
+  Swords,
+  Sparkles,
   Zap,
-  TrendingUp,
-  Dumbbell,
   CheckCircle,
-  Flame
+  Flame,
+  Star
 } from 'lucide-react';
 
 export const CharacterCard = () => {
   const { user, updateProfile } = useAuth();
-  const [switchingClass, setSwitchingClass] = useState(false);
+  const [selectedHero, setSelectedHero] = useState(null);
 
   if (!user) return null;
 
@@ -27,134 +28,178 @@ export const CharacterCard = () => {
   const levelPointsNeeded = pointsNextLevel - pointsCurrentLevel;
   const percent = Math.min(100, Math.round((levelPointsEarned / levelPointsNeeded) * 100));
 
-  const classes = [
+  // Kingdom Rush Hero Champions
+  const heroChampions = [
     {
-      id: 'Juggernaut',
-      icon: '🏋️‍♂️',
-      desc: '+10% Bonus on Compound Strength Lifts',
-      accent: 'border-amber-500 text-amber-400'
+      id: 'Paladin Knight',
+      heroName: 'Sir Gerald Lightseeker',
+      role: 'Holy Paladin Knight',
+      avatar: '🛡️',
+      quote: 'For honor and the King! None shall pass!',
+      specialSkill: 'Shield of Retribution',
+      desc: '+10% Point Multiplier on Compound Strength Lifts (Squats, Bench, Deadlifts)',
+      stars: 5,
+      color: 'border-amber-400 bg-amber-500/10 text-amber-300'
     },
     {
       id: 'Apex Strider',
-      icon: '🏃‍♂️',
-      desc: '+10% Bonus on Running Cardio',
-      accent: 'border-cyan-500 text-cyan-400'
+      heroName: 'Alleria Swiftwind',
+      role: 'Elven Ranger Huntress',
+      avatar: '🏹',
+      quote: 'Swift as the forest breeze. Bullseye!',
+      specialSkill: 'Multishot Swiftstride',
+      desc: '+10% Point Multiplier on Running & Sprint Cardio',
+      stars: 5,
+      color: 'border-emerald-400 bg-emerald-500/10 text-emerald-300'
     },
     {
-      id: 'Aquanaut',
-      icon: '🏊‍♀️',
-      desc: '+15% Bonus on Swimming Cardio',
-      accent: 'border-blue-500 text-blue-400'
+      id: 'Juggernaut',
+      heroName: 'Malik Hammerfury',
+      role: 'Dwarven Anvil Berserker',
+      avatar: '🔨',
+      quote: 'Feel the hammer of raw dwarven justice!',
+      specialSkill: 'Earthquake Smash',
+      desc: '+15% Heavy Volume Multiplier on Raw Iron Lifting',
+      stars: 5,
+      color: 'border-rose-400 bg-rose-500/10 text-rose-300'
     },
     {
       id: 'Shinobi',
-      icon: '🤸‍♂️',
-      desc: '+10% Bonus on Bodyweight Calisthenics',
-      accent: 'border-violet-500 text-violet-400'
+      heroName: 'Magnus Spellbane',
+      role: 'Arcane Sorcerer & Acrobat',
+      avatar: '🔮',
+      quote: 'Gravity is merely an illusion to the arcane mind.',
+      specialSkill: 'Arcane Telekinesis',
+      desc: '+10% Point Multiplier on Bodyweight Calisthenics & Planks',
+      stars: 4,
+      color: 'border-violet-400 bg-violet-500/10 text-violet-300'
+    },
+    {
+      id: 'Aquanaut',
+      heroName: 'Catha Tidecaller',
+      role: 'Merfolk Abyssal Guardian',
+      avatar: '🔱',
+      quote: 'The roaring ocean tides answer my call!',
+      specialSkill: 'Tidal Maelstrom',
+      desc: '+15% Point Multiplier on Swimming Cardio Load',
+      stars: 5,
+      color: 'border-cyan-400 bg-cyan-500/10 text-cyan-300'
     },
     {
       id: 'Vanguard',
-      icon: '⚡',
-      desc: '+5% Balanced Multiplier Across All Disciplines',
-      accent: 'border-emerald-500 text-emerald-400'
+      heroName: 'King Denas',
+      role: 'High Sovereign of Linirea',
+      avatar: '👑',
+      quote: 'My kingdom shall never fall! Charge, champions!',
+      specialSkill: 'Royal Decrees of Valor',
+      desc: '+5% Balanced Multiplier across all athletic disciplines',
+      stars: 5,
+      color: 'border-amber-300 bg-amber-400/15 text-amber-200'
     }
   ];
 
-  const milestoneBadges = [
+  // Kingdom Rush Campaign Medals & Badges
+  const milestoneMedals = [
+    {
+      id: 'Veznan Slayer',
+      name: "Bane of Vez'nan",
+      icon: '☠️',
+      tier: 'Legendary',
+      desc: "Dealt crushing blows to the dark wizard Vez'nan in the co-op raid boss battle.",
+      unlocked: user.badges?.includes('Veznan Slayer') || user.badges?.includes('Titan Slayer')
+    },
+    {
+      id: 'Iron Bastion',
+      name: 'Iron Bastion',
+      icon: '🛡️',
+      tier: 'Epic',
+      desc: 'Mastered heavy barbell compound volume until your armor hardened into steel.',
+      unlocked: user.badges?.includes('Iron Bastion') || user.badges?.includes('Iron Disciple')
+    },
     {
       id: 'Waterlogged',
-      name: 'Waterlogged',
+      name: 'Abyssal Trident',
       icon: '🌊',
-      desc: 'Submerged until gills sprouted. Completed heavy endurance swimming sessions.',
+      tier: 'Rare',
+      desc: 'Braved the perilous depths in heavy distance swimming sessions.',
       unlocked: user.badges?.includes('Waterlogged')
     },
     {
       id: 'Gravity Defier',
       name: 'Gravity Defier',
       icon: '🧗‍♂️',
-      desc: 'Newton wept. Crushed high-repetition bodyweight pull-ups and calisthenics.',
+      tier: 'Rare',
+      desc: 'Surpassed 50+ strict pull-ups and acrobatic calisthenics feats.',
       unlocked: user.badges?.includes('Gravity Defier')
     },
     {
-      id: 'Iron Disciple',
-      name: 'Iron Disciple',
-      icon: '🏛️',
-      desc: 'Lifted heavy iron until chalk became your skin tone.',
-      unlocked: user.badges?.includes('Iron Disciple')
-    },
-    {
       id: 'Century Club',
-      name: 'Century Club',
-      icon: '💯',
-      desc: 'Surpassed 1,000+ standardized points in the unified scoring engine.',
+      name: 'Order of the Centurion',
+      icon: '🎖️',
+      tier: 'Heroic',
+      desc: 'Amassed over 1,000+ standardized points in the Royal Realm tournament.',
       unlocked: user.badges?.includes('Century Club')
     },
     {
       id: 'Dawn Patrol',
-      name: 'Dawn Patrol',
+      name: 'Sunstone Vanguard',
       icon: '🌅',
-      desc: 'Logged intense physical output before the world hit snooze at 7:00 AM.',
+      tier: 'Common',
+      desc: 'Marched onto the training field before sunrise at 7:00 AM.',
       unlocked: user.badges?.includes('Dawn Patrol')
-    },
-    {
-      id: 'Titan Slayer',
-      name: 'Titan Slayer',
-      icon: '⚔️',
-      desc: 'Dealt over 1,000 damage in co-op community Boss Raids.',
-      unlocked: user.badges?.includes('Titan Slayer')
     }
   ];
 
-  const handleSelectClass = async (className) => {
-    await updateProfile({ characterClass: className });
-    setSwitchingClass(false);
+  const handleSelectChampion = async (champ) => {
+    await updateProfile({
+      characterClass: champ.id,
+      name: champ.heroName,
+      avatar: champ.avatar
+    });
   };
 
   return (
     <div className="space-y-6">
-      {/* Top Banner Card */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-[#111827] to-slate-900 border border-slate-700/80 p-6 shadow-2xl">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-6 relative z-10">
-          {/* Avatar and Basic Details */}
-          <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
+      {/* Hero Showcase Banner */}
+      <div className="kr-wood-panel p-6 sm:p-8 relative overflow-hidden border-4 border-[#78350F]">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 relative z-10">
+          {/* Hero Portrait & Info */}
+          <div className="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
             <div className="relative">
-              <div className="w-24 h-24 rounded-2xl bg-gradient-to-tr from-cyan-600 to-violet-600 flex items-center justify-center text-4xl shadow-glow-cyan border-2 border-white/20">
-                {user.avatar || '⚡'}
+              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-gradient-to-b from-[#452815] to-[#1F1208] border-4 border-amber-400 shadow-kr-gold flex items-center justify-center text-6xl shadow-2xl relative overflow-hidden">
+                <span>{user.avatar || '🛡️'}</span>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
               </div>
-              <div className="absolute -bottom-2 -right-2 px-2 py-0.5 rounded-full bg-amber-500 text-black font-extrabold text-xs shadow-md">
-                Lvl {user.level}
+              <div className="absolute -bottom-2 -right-2 px-2.5 py-1 rounded-full bg-amber-500 border-2 border-amber-800 text-stone-900 font-black text-xs shadow-lg flex items-center gap-1">
+                <Star className="w-3 h-3 fill-stone-900" />
+                <span>Level {user.level || 1}</span>
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-center sm:justify-start gap-2">
-                <h2 className="text-2xl font-black text-white">{user.name}</h2>
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-cyan-400 border border-slate-700 font-bold">
-                  @{user.username}
-                </span>
+                <h2 className="text-3xl sm:text-4xl font-black text-amber-200 drop-shadow">
+                  {user.name}
+                </h2>
               </div>
+              <p className="text-xs text-amber-400 font-bold uppercase tracking-wider mt-0.5">
+                {user.characterClass} • {user.team}
+              </p>
+              <p className="text-xs text-amber-100/90 italic mt-1.5">
+                "{user.quote || 'For honor, strength, and victory!'}"
+              </p>
 
-              <div className="text-sm font-semibold text-slate-300 mt-1 flex items-center justify-center sm:justify-start gap-2">
-                <span className="text-cyan-400">{user.characterClass}</span>
-                <span>•</span>
-                <span className="text-violet-400">{user.campus}</span>
-                <span>•</span>
-                <span className="text-amber-400">🔥 {user.streakDays || 1}d Streak</span>
-              </div>
-
-              {/* Level XP Bar */}
+              {/* Level Progress XP Bar */}
               <div className="mt-4 w-full sm:w-80">
-                <div className="flex justify-between text-xs font-semibold text-slate-400 mb-1">
-                  <span>Level {level} Progression</span>
-                  <span className="text-cyan-400 font-mono">
+                <div className="flex justify-between text-xs font-bold text-amber-200 mb-1">
+                  <span>Level Progression (Lvl {level})</span>
+                  <span className="font-mono text-amber-400 font-bold">
                     {Math.round(levelPointsEarned)} / {Math.round(levelPointsNeeded)} XP ({percent}%)
                   </span>
                 </div>
-                <div className="w-full h-3 rounded-full bg-slate-800 overflow-hidden border border-slate-700/50">
+                <div className="w-full h-4 rounded-full bg-[#180D06] p-0.5 border-2 border-[#78350F] shadow-inner">
                   <div
-                    className="h-full bg-gradient-to-r from-cyan-500 via-sky-400 to-violet-500 rounded-full transition-all duration-700"
+                    className="h-full rounded-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-300 shadow-kr-gold transition-all duration-700"
                     style={{ width: `${percent}%` }}
                   />
                 </div>
@@ -162,152 +207,155 @@ export const CharacterCard = () => {
             </div>
           </div>
 
-          {/* Quick Stat Pill Overview */}
-          <div className="grid grid-cols-2 gap-3 w-full md:w-auto">
-            <div className="p-3 rounded-xl bg-slate-800/60 border border-slate-700 text-center">
-              <div className="text-xs text-slate-400 font-medium">All-Time Points</div>
-              <div className="text-lg font-black text-cyan-300 mt-0.5">
-                {Math.round(user.totalPoints).toLocaleString()}
+          {/* Points Overview Cards */}
+          <div className="grid grid-cols-2 gap-3 w-full sm:w-auto">
+            <div className="p-4 rounded-xl bg-[#241409] border-2 border-[#5C3317] text-center shadow-md">
+              <div className="text-xs text-amber-300 font-bold whitespace-nowrap">Total Points</div>
+              <div className="text-2xl font-black text-amber-400 mt-1 whitespace-nowrap">
+                {Math.round(user.totalPoints || 0).toLocaleString()} <span className="text-xs font-bold text-amber-200/70">PTS</span>
               </div>
             </div>
-            <div className="p-3 rounded-xl bg-slate-800/60 border border-slate-700 text-center">
-              <div className="text-xs text-slate-400 font-medium">Weekly Score</div>
-              <div className="text-lg font-black text-amber-300 mt-0.5">
-                {Math.round(user.weeklyPoints).toLocaleString()}
+
+            <div className="p-4 rounded-xl bg-[#241409] border-2 border-[#5C3317] text-center shadow-md">
+              <div className="text-xs text-amber-300 font-bold whitespace-nowrap">Weekly Points</div>
+              <div className="text-2xl font-black text-amber-300 mt-1 whitespace-nowrap">
+                {Math.round(user.weeklyPoints || 0).toLocaleString()} <span className="text-xs font-bold text-amber-200/70">PTS</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Attributes Radar & Character Class Switcher */}
+      {/* Hero Attributes Matrix & Hero Champion Selection */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Radar Attributes */}
-        <div className="p-6 rounded-2xl bg-[#111827] border border-slate-800">
-          <div className="flex items-center justify-between mb-4">
+        {/* Attribute Matrix Card */}
+        <div className="kr-stone-card p-6 border-3 border-[#5C3317]">
+          <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#5C3317]">
             <div>
-              <h3 className="text-base font-extrabold text-white flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-cyan-400" />
-                RPG Attribute Matrix
+              <h3 className="text-xl font-black text-amber-200 flex items-center gap-2">
+                <Shield className="w-5 h-5 text-amber-400" />
+                Character Attributes & Stats
               </h3>
-              <p className="text-xs text-slate-400">
-                Grown dynamically from physical volume, cadence, and load
+              <p className="text-xs text-amber-100/70">
+                Calculated dynamically from cardio distance, calisthenics reps, and volume
               </p>
             </div>
           </div>
 
           <StatRadarChart stats={user.stats} />
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4 pt-4 border-t border-slate-800/80 text-center">
-            <div>
-              <div className="text-[11px] font-medium text-slate-400">Strength</div>
-              <div className="text-base font-black text-amber-400">{user.stats?.strength || 10}</div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4 pt-4 border-t border-[#5C3317] text-center">
+            <div className="p-2 rounded-lg bg-[#140E0A] border border-[#5C3317]">
+              <div className="text-xs text-amber-300 font-bold">⚔️ Strength</div>
+              <div className="text-lg font-black text-amber-400">{user.stats?.strength || 10}</div>
             </div>
-            <div>
-              <div className="text-[11px] font-medium text-slate-400">Endurance</div>
-              <div className="text-base font-black text-cyan-400">{user.stats?.endurance || 10}</div>
+            <div className="p-2 rounded-lg bg-[#140E0A] border border-[#5C3317]">
+              <div className="text-xs text-amber-300 font-bold">🏹 Endurance</div>
+              <div className="text-lg font-black text-emerald-400">{user.stats?.endurance || 10}</div>
             </div>
-            <div>
-              <div className="text-[11px] font-medium text-slate-400">Agility</div>
-              <div className="text-base font-black text-violet-400">{user.stats?.agility || 10}</div>
+            <div className="p-2 rounded-lg bg-[#140E0A] border border-[#5C3317]">
+              <div className="text-xs text-amber-300 font-bold">⚡ Agility</div>
+              <div className="text-lg font-black text-cyan-400">{user.stats?.agility || 10}</div>
             </div>
-            <div>
-              <div className="text-[11px] font-medium text-slate-400">Stamina</div>
-              <div className="text-base font-black text-emerald-400">{user.stats?.stamina || 10}</div>
+            <div className="p-2 rounded-lg bg-[#140E0A] border border-[#5C3317]">
+              <div className="text-xs text-amber-300 font-bold">🛡️ Stamina</div>
+              <div className="text-lg font-black text-amber-300">{user.stats?.stamina || 10}</div>
             </div>
           </div>
         </div>
 
-        {/* Character Class Mastery */}
-        <div className="p-6 rounded-2xl bg-[#111827] border border-slate-800 flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="text-base font-extrabold text-white flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-violet-400" />
-                  Character Class & Affinity Flairs
-                </h3>
-                <p className="text-xs text-slate-400">
-                  Select your archetype for unique point multipliers
-                </p>
-              </div>
+        {/* Hero Champion Roster & Class Skills */}
+        <div className="kr-wood-panel p-6 border-3 border-[#5C3317]">
+          <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#5C3317]">
+            <div>
+              <h3 className="text-xl font-black text-amber-200 flex items-center gap-2">
+                <Swords className="w-5 h-5 text-amber-400" />
+                Hero Champions & Archetypes
+              </h3>
+              <p className="text-xs text-amber-100/70">
+                Select your champion archetype to activate discipline affinity multipliers
+              </p>
             </div>
+          </div>
 
-            <div className="space-y-2.5">
-              {classes.map(cls => {
-                const isSelected = user.characterClass === cls.id;
-                return (
-                  <button
-                    key={cls.id}
-                    onClick={() => handleSelectClass(cls.id)}
-                    className={`w-full p-3 rounded-xl border text-left flex items-center justify-between transition-all ${
-                      isSelected
-                        ? 'border-cyan-500 bg-cyan-500/15 shadow-glow-cyan'
-                        : 'border-slate-800 bg-slate-900/60 hover:border-slate-700'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">{cls.icon}</span>
-                      <div>
-                        <div className="text-sm font-extrabold text-white flex items-center gap-2">
-                          {cls.id}
-                          {isSelected && (
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-400 text-black font-black uppercase">
-                              Active
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-xs text-slate-400 mt-0.5">{cls.desc}</div>
-                      </div>
+          <div className="space-y-2.5 max-h-[380px] overflow-y-auto pr-1">
+            {heroChampions.map(champ => {
+              const isSelected = user.characterClass === champ.id || user.name === champ.heroName;
+              return (
+                <button
+                  key={champ.heroName}
+                  onClick={() => handleSelectChampion(champ)}
+                  className={`w-full p-3 rounded-xl border-2 text-left flex items-start gap-3 transition-all ${
+                    isSelected
+                      ? 'border-amber-400 bg-gradient-to-r from-amber-950/60 to-[#2A160A] shadow-kr-gold'
+                      : 'border-[#5C3317] bg-[#1A0E06]/80 hover:border-amber-600'
+                  }`}
+                >
+                  <span className="text-3xl">{champ.avatar}</span>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-black text-amber-200">
+                        {champ.heroName}
+                      </span>
+                      {isSelected ? (
+                        <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-400 text-stone-900">
+                          Active Hero
+                        </span>
+                      ) : (
+                        <span className="text-[10px] text-amber-400 font-bold">Select</span>
+                      )}
                     </div>
-                  </button>
-                );
-              })}
-            </div>
+                    <div className="text-[11px] text-amber-400 font-bold">{champ.role} • Skill: {champ.specialSkill}</div>
+                    <div className="text-[11px] text-amber-100/80 mt-0.5 leading-snug">{champ.desc}</div>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
 
-      {/* Milestone Evolution Badges */}
-      <div className="p-6 rounded-2xl bg-[#111827] border border-slate-800">
-        <div className="flex items-center justify-between mb-4">
+      {/* Badges & Achievements */}
+      <div className="kr-stone-card p-6 border-3 border-[#5C3317]">
+        <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#5C3317]">
           <div>
-            <h3 className="text-base font-extrabold text-white flex items-center gap-2">
+            <h3 className="text-xl font-black text-amber-200 flex items-center gap-2">
               <Award className="w-5 h-5 text-amber-400" />
-              Milestone Evolution Badges & Titles
+              Badges & Achievements
             </h3>
-            <p className="text-xs text-slate-400">
-              Humorous and animated accolades unlocked through real physical milestones
+            <p className="text-xs text-amber-100/70">
+              Milestone badges earned through physical discipline, streaks, and raids
             </p>
           </div>
-          <span className="text-xs font-bold text-slate-400">
-            {user.badges?.length || 0} / {milestoneBadges.length} Unlocked
+          <span className="text-sm font-black text-amber-400">
+            {user.badges?.length || 0} / {milestoneMedals.length} Badges Unlocked
           </span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {milestoneBadges.map(badge => (
+          {milestoneMedals.map(medal => (
             <div
-              key={badge.id}
-              className={`p-4 rounded-xl border transition-all ${
-                badge.unlocked
-                  ? 'border-amber-500/40 bg-gradient-to-tr from-slate-900 to-amber-950/20 shadow-glow-gold'
-                  : 'border-slate-800/80 bg-slate-900/40 opacity-50 grayscale'
+              key={medal.id}
+              className={`p-4 rounded-xl border-2 transition-all ${
+                medal.unlocked
+                  ? 'border-amber-400/70 bg-gradient-to-b from-[#382012] to-[#1F1208] shadow-kr-gold'
+                  : 'border-[#3D2515] bg-[#120D08]/60 opacity-40 grayscale'
               }`}
             >
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-2xl border border-slate-700">
-                  {badge.icon}
+              <div className="flex items-start gap-3">
+                <div className="w-12 h-12 rounded-xl bg-[#25150A] border-2 border-amber-500/40 flex items-center justify-center text-2xl shadow-inner flex-shrink-0">
+                  {medal.icon}
                 </div>
                 <div>
-                  <div className="font-extrabold text-sm text-white flex items-center gap-1.5">
-                    {badge.name}
-                    {badge.unlocked && (
-                      <CheckCircle className="w-3.5 h-3.5 text-amber-400" />
-                    )}
+                  <div className="text-sm font-black text-amber-200 flex items-center gap-1.5">
+                    {medal.name}
+                    {medal.unlocked && <CheckCircle className="w-3.5 h-3.5 text-amber-400" />}
                   </div>
-                  <p className="text-xs text-slate-400 mt-0.5 leading-snug">
-                    {badge.desc}
+                  <div className="text-[10px] uppercase font-bold text-amber-400 mt-0.5">
+                    {medal.tier} Badge
+                  </div>
+                  <p className="text-xs text-amber-100/80 mt-1 leading-snug">
+                    {medal.desc}
                   </p>
                 </div>
               </div>

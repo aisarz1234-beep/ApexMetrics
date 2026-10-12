@@ -12,18 +12,17 @@ import { AntiCheatInspector } from './components/AntiCheatInspector.jsx';
 import { AnalyticsCharts } from './components/AnalyticsCharts.jsx';
 import { QuickLogModal } from './components/QuickLogModal.jsx';
 import {
-  Zap,
+  Shield,
   Trophy,
   Flame,
   Award,
   Sparkles,
   Swords,
   MapPin,
-  TrendingUp,
-  Activity,
   PlusCircle,
-  ShieldCheck,
-  Check
+  Crown,
+  Star,
+  Scroll
 } from 'lucide-react';
 
 export default function App() {
@@ -38,10 +37,9 @@ export default function App() {
   useEffect(() => {
     if (latestEvent?.type === 'workout:new') {
       const w = latestEvent.data.workout;
-      setToastMessage(`⚡ ${w.userName} logged ${w.activityType} for +${w.points} PTS!`);
+      setToastMessage(`⚔️ ${w.userName} proclaimed a feat in ${w.activityType} (+${w.points} PTS)!`);
       setTimeout(() => setToastMessage(''), 4500);
 
-      // If it was our user, refresh user state
       if (w.userId === user?.id && latestEvent.data.user) {
         setUser(latestEvent.data.user);
       }
@@ -52,21 +50,21 @@ export default function App() {
     if (data.user) {
       setUser(data.user);
     }
-    setToastMessage(`🎉 Great work! You earned +${data.workout?.points} standardized points.`);
+    setToastMessage(`🎉 Glory to the Kingdom! You earned +${data.workout?.points} standardized points!`);
     setTimeout(() => setToastMessage(''), 4500);
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#120D08] text-amber-50 flex flex-col font-sans selection:bg-amber-500 selection:text-black">
       {/* Toast Notification Banner */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 p-4 rounded-2xl bg-cyan-950/90 border border-cyan-500/50 backdrop-blur-xl shadow-glow-cyan text-white text-xs font-bold flex items-center gap-2 animate-bounce-subtle">
-          <Zap className="w-4 h-4 text-cyan-400" />
+        <div className="fixed bottom-6 right-6 z-50 p-4 rounded-2xl bg-[#3D2210] border-2 border-amber-400 backdrop-blur-xl shadow-kr-gold text-amber-200 text-sm font-bold flex items-center gap-2 animate-bounce-subtle">
+          <Shield className="w-5 h-5 text-amber-400 fill-amber-500" />
           <span>{toastMessage}</span>
         </div>
       )}
 
-      {/* Top Navbar */}
+      {/* Top Kingdom Rush Navbar */}
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -78,58 +76,58 @@ export default function App() {
         {/* Dashboard Overview */}
         {activeTab === 'dashboard' && (
           <div className="space-y-8">
-            {/* Hero Quick Stats Banner */}
-            <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-slate-900 via-[#111827] to-cyan-950/30 border border-slate-800 shadow-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+            {/* Grand Hero Banner */}
+            <div className="kr-wood-panel p-6 sm:p-8 border-4 border-[#78350F] relative overflow-hidden shadow-2xl">
+              <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
               <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                 <div>
-                  <div className="flex items-center gap-2 text-cyan-400 font-extrabold text-xs uppercase tracking-wider mb-1">
-                    <Sparkles className="w-4 h-4" />
-                    Unified Multi-Discipline Normalization Engine
+                  <div className="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider mb-1">
+                    <Crown className="w-4 h-4 text-amber-400" />
+                    Athletic Realm of Champions
                   </div>
-                  <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-                    Welcome to <span className="bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent">ApexMetrics</span>
+                  <h1 className="text-3xl sm:text-5xl font-black text-amber-200 tracking-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                    Unified Multi-Discipline <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 bg-clip-text text-transparent">Athletic Scoring</span>
                   </h1>
-                  <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
-                    Compare and compete fairly across running, swimming, cycling, calisthenics, and heavy strength training with a single unified score.
+                  <p className="text-sm sm:text-base text-amber-100/90 mt-2 max-w-2xl leading-relaxed">
+                    Compete fairly across running, swimming, cycling, calisthenics, and weightlifting with a normalized point engine and real-time leaderboards.
                   </p>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => setIsLogModalOpen(true)}
-                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black text-sm shadow-glow-cyan transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2"
+                    className="kr-btn-gold px-6 py-3.5 rounded-2xl text-base font-black flex items-center gap-2 shadow-kr-button"
                   >
                     <PlusCircle className="w-5 h-5" />
-                    <span>Quick-Log Workout</span>
+                    <span>Log Activity ⚡</span>
                   </button>
                   <button
                     onClick={() => setActiveTab('leaderboards')}
-                    className="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-200 font-bold text-sm border border-slate-700 transition-colors"
+                    className="px-5 py-3 rounded-2xl bg-[#382012] hover:bg-[#4A2B19] text-amber-200 font-bold text-base border-2 border-[#5C3317] transition-colors"
                   >
-                    View Ranks
+                    Leaderboards
                   </button>
                 </div>
               </div>
 
               {/* Point Multiplier Formula Showcase Bar */}
-              <div className="mt-6 pt-6 border-t border-slate-800/80 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
-                  <div className="text-slate-400 font-medium">🏊 Swimming</div>
-                  <div className="text-cyan-400 font-mono font-bold mt-0.5">30.0 pts / km</div>
+              <div className="mt-6 pt-6 border-t-2 border-[#5C3317] grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="p-3.5 rounded-xl bg-[#241409] border-2 border-[#5C3317]">
+                  <div className="text-amber-300 font-bold text-xs">🏊 Swimming</div>
+                  <div className="text-amber-400 font-mono font-black text-sm mt-0.5">30.0 pts / km</div>
                 </div>
-                <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
-                  <div className="text-slate-400 font-medium">🏃 Running</div>
-                  <div className="text-cyan-400 font-mono font-bold mt-0.5">10.0 pts / km</div>
+                <div className="p-3.5 rounded-xl bg-[#241409] border-2 border-[#5C3317]">
+                  <div className="text-amber-300 font-bold text-xs">🏃 Running</div>
+                  <div className="text-amber-400 font-mono font-black text-sm mt-0.5">10.0 pts / km</div>
                 </div>
-                <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
-                  <div className="text-slate-400 font-medium">🤸 Pull-ups</div>
-                  <div className="text-cyan-400 font-mono font-bold mt-0.5">3.0 pts / rep</div>
+                <div className="p-3.5 rounded-xl bg-[#241409] border-2 border-[#5C3317]">
+                  <div className="text-amber-300 font-bold text-xs">🤸 Pull-ups</div>
+                  <div className="text-amber-400 font-mono font-black text-sm mt-0.5">3.0 pts / rep</div>
                 </div>
-                <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
-                  <div className="text-slate-400 font-medium">🏋️ Compound Volume</div>
-                  <div className="text-cyan-400 font-mono font-bold mt-0.5">0.05 per kg-rep</div>
+                <div className="p-3.5 rounded-xl bg-[#241409] border-2 border-[#5C3317]">
+                  <div className="text-amber-300 font-bold text-xs">🏋️ Compound Lifts</div>
+                  <div className="text-amber-400 font-mono font-black text-sm mt-0.5">0.05 per kg-rep</div>
                 </div>
               </div>
             </div>
@@ -177,19 +175,19 @@ export default function App() {
       />
 
       {/* Footer */}
-      <footer className="mt-auto border-t border-slate-800/80 bg-[#0B0F19] py-6 text-center text-xs text-slate-500">
+      <footer className="mt-auto border-t-4 border-[#5E3418] bg-[#1E0F07] py-6 text-center text-xs text-amber-200/70">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="text-cyan-400 font-black">⚡ ApexMetrics</span>
+            <span className="text-amber-300 font-black text-sm">🛡️ ApexMetrics: Kingdom of Champions</span>
             <span>•</span>
-            <span>Unified Multi-Discipline Normalization & Real-Time Leaderboard System</span>
+            <span>Fair Multi-Discipline Scoring & Real-Time Leaderboards</span>
           </div>
-          <div className="flex items-center gap-4 text-slate-400 font-medium">
+          <div className="flex items-center gap-4 text-amber-400 font-mono text-[11px] font-bold">
             <span>TLS 1.3</span>
             <span>•</span>
-            <span>Redis ZSET Sorted Sets</span>
+            <span>REDIS ZSET ENGINE</span>
             <span>•</span>
-            <span>Socket.io WebSockets</span>
+            <span>SOCKET.IO REALM SYNC</span>
           </div>
         </div>
       </footer>

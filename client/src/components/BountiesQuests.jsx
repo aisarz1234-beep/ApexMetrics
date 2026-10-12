@@ -8,8 +8,8 @@ import {
   Flame,
   CheckCircle2,
   Clock,
-  Zap,
-  TrendingUp
+  Star,
+  Scroll
 } from 'lucide-react';
 
 export const BountiesQuests = ({ onOpenLogModal }) => {
@@ -36,8 +36,8 @@ export const BountiesQuests = ({ onOpenLogModal }) => {
       const res = await api.claimBounty(bountyId);
 
       confetti({
-        particleCount: 100,
-        spread: 70,
+        particleCount: 110,
+        spread: 80,
         origin: { y: 0.6 }
       });
 
@@ -54,21 +54,21 @@ export const BountiesQuests = ({ onOpenLogModal }) => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Bounty Board Header */}
       <div>
-        <h2 className="text-2xl font-black text-white tracking-tight flex items-center gap-2">
-          <Sparkles className="w-6 h-6 text-amber-400" />
+        <h2 className="text-3xl font-black text-amber-200 tracking-tight flex items-center gap-2">
+          <Scroll className="w-7 h-7 text-amber-400" />
           Dynamic Bounties & Daily Quests
-          <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 font-bold">
-            Bonus Multipliers
+          <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500 font-bold uppercase">
+            Active Multipliers
           </span>
         </h2>
-        <p className="text-xs text-slate-400">
-          Complete rotating fitness challenges to activate bonus multipliers and earn extra standardized points
+        <p className="text-xs text-amber-100/70">
+          Complete daily fitness challenges to earn bonus standardized points and multipliers
         </p>
       </div>
 
-      {/* Bounties Grid */}
+      {/* Quests Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {bounties.map(bounty => {
           const isClaimed = bounty.claimedBy?.includes(user?.id);
@@ -76,57 +76,57 @@ export const BountiesQuests = ({ onOpenLogModal }) => {
           return (
             <div
               key={bounty.id}
-              className={`p-6 rounded-2xl border flex flex-col justify-between transition-all ${
+              className={`p-6 rounded-2xl border-3 flex flex-col justify-between transition-all relative ${
                 isClaimed
-                  ? 'border-emerald-500/30 bg-emerald-950/10'
-                  : 'border-slate-800 bg-[#111827] hover:border-slate-700'
+                  ? 'border-emerald-600/50 bg-[#162419]/90'
+                  : 'border-[#5C3317] bg-[#241409] hover:border-amber-400 shadow-md'
               }`}
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-slate-800 text-cyan-400 border border-slate-700 uppercase">
-                    {bounty.category}
+                  <span className="text-xs font-black px-2.5 py-0.5 rounded-md bg-[#382012] text-amber-300 border border-[#78350F] uppercase">
+                    {bounty.category} Quest
                   </span>
-                  <div className="flex items-center gap-1 text-[11px] text-slate-400 font-medium">
+                  <div className="flex items-center gap-1 text-xs text-amber-300/80">
                     <Clock className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Expires in {bounty.expiresIn}</span>
+                    <span>Expires: {bounty.expiresIn}</span>
                   </div>
                 </div>
 
-                <h3 className="text-lg font-extrabold text-white">{bounty.title}</h3>
-                <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                <h3 className="text-xl font-black text-amber-100">{bounty.title}</h3>
+                <p className="text-xs text-amber-100/80 mt-1 leading-relaxed">
                   {bounty.description}
                 </p>
 
-                {/* Reward Callout */}
-                <div className="flex items-center gap-2 mt-4 p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs">
+                {/* Reward Badge */}
+                <div className="flex items-center gap-2 mt-4 p-2.5 rounded-xl bg-[#1A0E06] border border-[#5C3317] text-xs font-bold">
                   <Flame className="w-4 h-4 text-amber-400" />
-                  <span className="font-bold text-amber-300">
-                    Reward: +{bounty.rewardPoints} PTS & {bounty.multiplier}x Multiplier
+                  <span className="text-amber-300">
+                    Reward: +{bounty.rewardPoints} PTS & {bounty.multiplier}x Multiplier (⭐⭐⭐)
                   </span>
                 </div>
               </div>
 
               {/* Action Button */}
-              <div className="mt-5 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+              <div className="mt-5 pt-4 border-t border-[#5C3317] flex items-center justify-between">
                 {isClaimed ? (
-                  <span className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-                    <CheckCircle2 className="w-4 h-4" /> Reward Claimed (+{bounty.rewardPoints} pts)
+                  <span className="text-xs font-black text-emerald-400 flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4" /> Bounty Claimed (+{bounty.rewardPoints} pts)
                   </span>
                 ) : (
                   <>
                     <button
                       onClick={onOpenLogModal}
-                      className="text-xs text-slate-400 hover:text-white underline"
+                      className="text-xs text-amber-400 hover:text-amber-300 font-bold underline"
                     >
-                      Log required workout →
+                      Log required activity →
                     </button>
                     <button
                       onClick={() => handleClaim(bounty.id)}
                       disabled={claimingId === bounty.id}
-                      className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-extrabold text-xs shadow-glow-gold transition-all transform active:scale-95"
+                      className="kr-btn-gold px-4 py-2 rounded-xl text-xs font-black shadow-kr-button"
                     >
-                      {claimingId === bounty.id ? 'Claiming...' : 'Claim Bounty Reward ⚡'}
+                      {claimingId === bounty.id ? 'Claiming...' : 'Claim Bounty ⭐'}
                     </button>
                   </>
                 )}

@@ -151,15 +151,15 @@ export class ScoringEngine {
     let classBonusMultiplier = 1.0;
     const normalizedClass = (userClass || 'Vanguard').toLowerCase();
 
-    if (normalizedClass.includes('juggernaut') && workout.activityCategory === 'strength') {
-      classBonusMultiplier = 1.10; // +10% bonus for Juggernaut on strength
-    } else if (normalizedClass.includes('strider') && workout.activityType === 'running') {
-      classBonusMultiplier = 1.10; // +10% bonus for Sprinters on running
-    } else if (normalizedClass.includes('aquanaut') && workout.activityType === 'swimming') {
+    if ((normalizedClass.includes('juggernaut') || normalizedClass.includes('paladin')) && workout.activityCategory === 'strength') {
+      classBonusMultiplier = 1.10; // +10% bonus for Paladin / Juggernaut on strength
+    } else if ((normalizedClass.includes('strider') || normalizedClass.includes('ranger')) && workout.activityType === 'running') {
+      classBonusMultiplier = 1.10; // +10% bonus for Rangers on running
+    } else if ((normalizedClass.includes('aquanaut') || normalizedClass.includes('tidecaller')) && workout.activityType === 'swimming') {
       classBonusMultiplier = 1.15; // +15% bonus for Aquanaut on swimming
-    } else if (normalizedClass.includes('shinobi') && workout.activityCategory === 'calisthenics') {
+    } else if ((normalizedClass.includes('shinobi') || normalizedClass.includes('sorcerer')) && workout.activityCategory === 'calisthenics') {
       classBonusMultiplier = 1.10; // +10% bonus for Calisthenics
-    } else if (normalizedClass.includes('vanguard')) {
+    } else if (normalizedClass.includes('vanguard') || normalizedClass.includes('king')) {
       classBonusMultiplier = 1.05; // Balanced +5% across all disciplines
     }
 

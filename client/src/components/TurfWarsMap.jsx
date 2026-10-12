@@ -6,11 +6,11 @@ import {
   MapPin,
   Shield,
   Flag,
-  Zap,
   Flame,
-  Award,
+  Star,
+  Swords,
   Sparkles,
-  Users
+  Crown
 } from 'lucide-react';
 
 export const TurfWarsMap = ({ onOpenLogModal }) => {
@@ -41,92 +41,88 @@ export const TurfWarsMap = ({ onOpenLogModal }) => {
     }
   }, [latestEvent]);
 
-  const getTeamColor = (teamName) => {
-    if (teamName?.includes('Crimson')) return { badge: 'bg-rose-500/20 text-rose-400 border-rose-500/40', bar: 'bg-rose-500', text: 'text-rose-400' };
-    if (teamName?.includes('Cobalt')) return { badge: 'bg-blue-500/20 text-blue-400 border-blue-500/40', bar: 'bg-blue-500', text: 'text-blue-400' };
-    if (teamName?.includes('Emerald')) return { badge: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40', bar: 'bg-emerald-500', text: 'text-emerald-400' };
-    return { badge: 'bg-amber-500/20 text-amber-400 border-amber-500/40', bar: 'bg-amber-500', text: 'text-amber-400' };
+  const getTeamBanner = (teamName) => {
+    if (teamName?.includes('Ironfist')) return { badge: 'bg-red-900/60 text-amber-200 border-red-500', bar: 'bg-red-600', text: 'text-red-400' };
+    if (teamName?.includes('Knights') || teamName?.includes('Linirea')) return { badge: 'bg-blue-900/60 text-amber-200 border-blue-500', bar: 'bg-blue-600', text: 'text-blue-400' };
+    if (teamName?.includes('Sentinels') || teamName?.includes('Emerald')) return { badge: 'bg-emerald-900/60 text-amber-200 border-emerald-500', bar: 'bg-emerald-600', text: 'text-emerald-400' };
+    return { badge: 'bg-amber-900/60 text-amber-200 border-amber-500', bar: 'bg-amber-500', text: 'text-amber-400' };
   };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Turf Wars Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-black text-white tracking-tight flex items-center gap-2">
-            <MapPin className="w-6 h-6 text-cyan-400" />
-            Campus Turf Wars & Territory Capture
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 font-bold">
-              Map Arena
+          <h2 className="text-3xl font-black text-amber-200 tracking-tight flex items-center gap-2">
+            <MapPin className="w-7 h-7 text-amber-400" />
+            Campus Turf Wars & Territory Map
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500 font-bold uppercase">
+              Live Sectors
             </span>
           </h2>
-          <p className="text-xs text-slate-400">
-            Log workouts at campus training grounds to conquer virtual territories for your faction
+          <p className="text-xs text-amber-100/70">
+            Train at campus zones and strongholds to capture regional territory for your team
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-xs text-slate-400 font-semibold">Your Faction:</span>
-          <span className={`text-xs px-3 py-1 rounded-lg border font-extrabold ${getTeamColor(user?.team).badge}`}>
-            {user?.team || 'Crimson Lions'}
+          <span className="text-xs text-amber-300 font-bold">Your Team:</span>
+          <span className={`text-xs px-3 py-1 rounded-xl border-2 font-black ${getTeamBanner(user?.team).badge}`}>
+            {user?.team || 'Royal Knights of Linirea'}
           </span>
         </div>
       </div>
 
-      {/* Campus Map & Territories Grid */}
+      {/* Campaign Map & Territory Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Visual Campus Territory Interactive Map */}
-        <div className="lg:col-span-2 rounded-3xl bg-slate-900 border border-slate-800 p-6 relative overflow-hidden flex flex-col justify-between min-h-[420px]">
-          {/* Subtle Campus Grid Map Overlay */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f2937_1px,transparent_1px),linear-gradient(to_bottom,#1f2937_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-25" />
+        {/* Campaign Map Container */}
+        <div className="lg:col-span-2 kr-wood-panel p-6 border-4 border-[#78350F] relative overflow-hidden flex flex-col justify-between min-h-[460px]">
+          <div className="absolute inset-0 bg-[radial-gradient(#8D5B29_1px,transparent_1px)] [background-size:24px_24px] opacity-20 pointer-events-none" />
 
           <div className="relative z-10 flex items-center justify-between">
-            <div className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-              <Flag className="w-3.5 h-3.5 text-cyan-400" />
-              Interactive Campus Sector Map
+            <div className="text-sm font-black text-amber-300 flex items-center gap-2">
+              <Flag className="w-4 h-4 text-amber-400" />
+              Campus Sectors & Strongholds
             </div>
-            <span className="text-[11px] text-slate-500 font-medium">Click sector to inspect & fortify</span>
+            <span className="text-xs text-amber-200/80 italic">Select sector to view territory details</span>
           </div>
 
-          {/* Interactive Zone Hotspots */}
-          <div className="relative z-10 my-auto py-8 grid grid-cols-2 sm:grid-cols-3 gap-4">
+          {/* Interactive Territory Nodes */}
+          <div className="relative z-10 my-auto py-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {territories.map(zone => {
-              const teamCol = getTeamColor(zone.controllingTeam);
+              const banner = getTeamBanner(zone.controllingTeam);
               const isSelected = selectedZone?.id === zone.id;
 
               return (
                 <button
                   key={zone.id}
                   onClick={() => setSelectedZone(zone)}
-                  className={`p-4 rounded-2xl border text-left transition-all relative overflow-hidden group ${
+                  className={`p-4 rounded-2xl border-3 text-left transition-all relative overflow-hidden group ${
                     isSelected
-                      ? 'border-cyan-400 bg-slate-800/90 shadow-glow-cyan'
-                      : 'border-slate-800 bg-slate-900/80 hover:border-slate-700'
+                      ? 'border-amber-400 bg-gradient-to-b from-[#4A260F] to-[#251307] shadow-kr-gold transform -translate-y-1'
+                      : 'border-[#5C3317] bg-[#1E1007]/90 hover:border-amber-500'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xl">
-                      {zone.name.includes('Gym') ? '🏛️' :
-                       zone.name.includes('Track') ? '🏟️' :
-                       zone.name.includes('Aquatic') ? '🏊‍♂️' :
-                       zone.name.includes('Steps') ? '🪜' : '🌳'}
-                    </span>
-                    <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${teamCol.badge}`}>
-                      {zone.controlPercent}%
-                    </span>
+                    <span className="text-2xl">{zone.icon || '⚔️'}</span>
+                    <div className="flex items-center gap-0.5 text-amber-400">
+                      <Star className="w-3.5 h-3.5 fill-amber-400" />
+                      <Star className="w-3.5 h-3.5 fill-amber-400" />
+                      <Star className="w-3.5 h-3.5 fill-amber-400" />
+                    </div>
                   </div>
 
-                  <div className="font-extrabold text-xs text-white group-hover:text-cyan-300 transition-colors line-clamp-1">
+                  <div className="font-black text-sm text-amber-200 group-hover:text-amber-400 transition-colors line-clamp-1">
                     {zone.name}
                   </div>
-                  <div className={`text-[10px] font-bold mt-0.5 ${teamCol.text}`}>
-                    {zone.controllingTeam}
+                  <div className={`text-[11px] font-bold mt-0.5 ${banner.text}`}>
+                    {zone.controllingTeam} ({zone.controlPercent}%)
                   </div>
 
-                  {/* Micro Progress Bar */}
-                  <div className="w-full h-1.5 rounded-full bg-slate-800 mt-3 overflow-hidden">
+                  {/* Control Bar */}
+                  <div className="w-full h-2 rounded-full bg-[#120A04] mt-3 overflow-hidden border border-[#5C3317]">
                     <div
-                      className={`h-full ${teamCol.bar} transition-all duration-500`}
+                      className={`h-full ${banner.bar} shadow-sm transition-all duration-500`}
                       style={{ width: `${zone.controlPercent}%` }}
                     />
                   </div>
@@ -135,62 +131,63 @@ export const TurfWarsMap = ({ onOpenLogModal }) => {
             })}
           </div>
 
-          {/* Map Footer Note */}
-          <div className="relative z-10 text-[11px] text-slate-400 flex items-center justify-between border-t border-slate-800/80 pt-3">
-            <span>Control bonuses apply automatically upon logging workouts</span>
+          <div className="relative z-10 text-xs text-amber-200/80 flex items-center justify-between border-t border-[#5C3317] pt-3">
+            <span>⚔️ Control bonuses apply automatically when recording physical logs</span>
             <button
               onClick={onOpenLogModal}
-              className="text-cyan-400 hover:underline font-bold"
+              className="text-amber-400 hover:text-amber-300 font-bold underline"
             >
-              Log Workout in Zone →
+              Defend or Capture Sector →
             </button>
           </div>
         </div>
 
-        {/* Selected Sector Inspector Panel */}
+        {/* Selected Sector Briefing Card */}
         {selectedZone && (
-          <div className="p-6 rounded-3xl bg-[#111827] border border-slate-800 flex flex-col justify-between space-y-4">
+          <div className="kr-parchment p-6 flex flex-col justify-between space-y-4 shadow-2xl relative">
             <div>
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                  Sector Intel
+              <div className="flex items-center justify-between border-b-2 border-[#8D5B29]/60 pb-2">
+                <span className="text-[11px] font-black uppercase tracking-wider text-[#78350F]">
+                  Territory Briefing
                 </span>
-                <span className={`text-xs px-2.5 py-0.5 rounded-full border font-bold ${getTeamColor(selectedZone.controllingTeam).badge}`}>
-                  {selectedZone.controllingTeam} Controlled
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#5C3317] text-amber-100 font-bold">
+                  {selectedZone.controlPercent}% Control
                 </span>
               </div>
 
-              <h3 className="text-xl font-black text-white mt-2">{selectedZone.name}</h3>
+              <h3 className="text-2xl font-black text-[#381A05] mt-3 leading-snug">
+                {selectedZone.name}
+              </h3>
 
-              <div className="mt-4 p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-semibold flex items-center gap-2">
-                <Sparkles className="w-4 h-4 flex-shrink-0" />
-                <span>Zone Buff: {selectedZone.activeBonus}</span>
+              <div className="mt-4 p-3 rounded-xl bg-amber-200/60 border border-[#8D5B29] text-[#451A03] text-xs font-bold flex items-start gap-2 shadow-inner">
+                <Sparkles className="w-4 h-4 flex-shrink-0 text-[#B45309] mt-0.5" />
+                <span>Sector Bonus: {selectedZone.activeBonus}</span>
               </div>
 
-              {/* Dominance Points & Stats */}
-              <div className="space-y-3 mt-4">
-                <div className="flex justify-between text-xs">
-                  <span className="text-slate-400">Dominance Points</span>
-                  <span className="font-bold text-white font-mono">
-                    {selectedZone.dominancePoints.toLocaleString()} PTS
+              {/* Dominance Points & Top Guardian */}
+              <div className="space-y-3 mt-5 text-sm text-[#451A03]">
+                <div className="flex justify-between border-b border-[#8D5B29]/30 pb-1">
+                  <span className="font-bold">Total Sector Points:</span>
+                  <span className="font-black text-[#78350F] font-mono">
+                    {selectedZone.dominancePoints?.toLocaleString()} PTS
                   </span>
                 </div>
-                <div className="flex justify-between text-xs">
-                  <span className="text-slate-400">Territory Control</span>
-                  <span className="font-bold text-white">{selectedZone.controlPercent}%</span>
+                <div className="flex justify-between border-b border-[#8D5B29]/30 pb-1">
+                  <span className="font-bold">Controlling Team:</span>
+                  <span className="font-black text-[#881337]">{selectedZone.controllingTeam}</span>
                 </div>
-                <div className="flex justify-between text-xs">
-                  <span className="text-slate-400">Top Guardian</span>
-                  <span className="font-bold text-amber-400">{selectedZone.topGuardian}</span>
+                <div className="flex justify-between border-b border-[#8D5B29]/30 pb-1">
+                  <span className="font-bold">Top Contributor:</span>
+                  <span className="font-black text-[#78350F]">{selectedZone.topGuardian}</span>
                 </div>
               </div>
             </div>
 
             <button
               onClick={onOpenLogModal}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold text-xs shadow-glow-cyan transition-all transform active:scale-95"
+              className="kr-btn-gold w-full py-3 rounded-xl text-base shadow-kr-button"
             >
-              Fortify or Capture Territory (+5% Bonus) ⚡
+              Capture / Fortify Sector (+5% Bonus) ⚔️
             </button>
           </div>
         )}
